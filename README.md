@@ -21,3 +21,18 @@ Indice:
 ## Funcionamiento general
 ## Diagrama de flujo
 
+flowchart TD
+  Start([Inicio])
+  Init["Inicializar nodo ROS2\ny publisher a /turtle1/cmd_vel"]
+  SetupKeyboard["Configurar captura de teclado"]
+  Loop["Bucle principal\n- leer tecla\n- decidir acción\n- publicar Twist"]
+  ArrowKeys["Flechas -> control manual\n(↑ ↓ ← →)"]
+  LetterKeys["Teclas letters (M/F/C) -> funciones de dibujo"]
+  ExecuteMove["Ejecutar movimiento:\npublicar velocidad lineal/ang."]
+  Stop["Detener tortuga / fin"]
+
+  Start --> Init --> SetupKeyboard --> Loop
+  Loop -->|Flecha| ArrowKeys --> ExecuteMove --> Loop
+  Loop -->|Letra| LetterKeys --> ExecuteMove --> Loop
+  Loop -->|q / Ctrl-C| Stop
+

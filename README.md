@@ -16,6 +16,13 @@ Indice:
 
 
 ## Objetivos
+
+- Familiarizarse con la arquitectura de ROS2 (nodos, tópicos, mensajes y servicios).
+- Implementar un nodo en Python capaz de publicar mensajes del tipo `Twist` para controlar el simulador *turtlesim*.
+- Utilizar el servicio `/reset` de turtlesim para reiniciar la posición y orientación de la tortuga.
+- Desarrollar un sistema de lectura de teclado en tiempo real que permita el control manual de la tortuga (flechas) y la ejecución de trayectorias predefinidas para dibujar letras.
+- Consolidar en un mismo programa la interacción entre tópicos, servicios y entrada del usuario.
+
 ## Procedimientos realizados
 ## Decisiones de diseño
 ## Funcionamiento general

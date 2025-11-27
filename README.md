@@ -28,13 +28,12 @@ flowchart TD
     B[Inicializar rclpy]
     C[Crear nodo TurtleController]
     D[Crear publisher /turtle1/cmd_vel]
-    E[Crear cliente del servicio /reset]
+    E[Crear cliente servicio /reset]
     F[Esperar servicio /reset]
 
     A --> B --> C --> D --> E --> F
 
     G{Tecla presionada?}
-
     F --> G
 
     H[reset_turtle()]
@@ -44,8 +43,13 @@ flowchart TD
 
     K([Salir del programa])
 
-    G -->|Letra J,N,D,A,M,R,C| H --> I --> G
-    G -->|Flechas| J --> G
+    G -->|Letra J,N,D,A,M,R,C| H
+    H --> I
+    I --> G
+
+    G -->|Flechas| J
+    J --> G
+
     G -->|s| K
 ```
 

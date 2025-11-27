@@ -1,0 +1,447 @@
+import rclpy
+from rclpy.node import Node
+from geometry_msgs.msg import Twist
+from std_srvs.srv import Empty
+import sys, termios, tty
+import time
+
+# --- Función auxiliar para leer una tecla ---
+def get_key():
+    fd = sys.stdin.fileno()
+    old_settings = termios.tcgetattr(fd)
+
+    try:
+        tty.setraw(fd)
+        key = sys.stdin.read(1)
+
+        if key == '\x1b':  # empieza una secuencia
+            key += sys.stdin.read(2)  # lee los otros 2 caracteres
+    finally:
+        termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
+
+    return key
+
+# --- Nodo principal ---
+class TurtleController(Node):
+    def __init__(self):
+        super().__init__('turtle_controller')
+
+        self.publisher_ = self.create_publisher(Twist, '/turtle1/cmd_vel', 10)
+
+        self.reset_client = self.create_client(Empty, '/reset')
+        self.get_logger().info("Esperando servicio /reset...")
+        self.reset_client.wait_for_service()
+        self.get_logger().info("Servicio /reset disponible ✔")
+
+    def reset_turtle(self):
+        req = Empty.Request()
+        self.get_logger().info("Llamando reset...")
+        future = self.reset_client.call_async(req)
+        rclpy.spin_until_future_complete(self, future)
+        self.get_logger().info("🐢 RESET completado ✔")
+
+    def move_turtle_onceJ(self):
+        msg = Twist()
+        msg.linear.x = 1.0   # velocidad hacia adelante
+        msg.angular.z = 0.0  # rotación
+        self.publisher_.publish(msg)
+        time.sleep(0.5)
+        self.get_logger().info('🐢 La tortuga se movió un ciclo')
+
+        msg=Twist()
+        msg.linear.x = 0.0
+        msg.angular.z = 3.14
+        self.publisher_.publish(msg)
+        time.sleep(1)
+
+        msg=Twist()
+        msg.linear.x = 1.0
+        msg.angular.z = 0.0
+        self.publisher_.publish(msg)
+        time.sleep(0.5)
+
+        msg=Twist()
+        msg.linear.x = 0.0
+        msg.angular.z = 1.57
+        self.publisher_.publish(msg)
+        time.sleep(1)
+
+        msg=Twist()
+        msg.linear.x = 2.0
+        msg.angular.z = 0.0
+        self.publisher_.publish(msg)
+        time.sleep(1)
+
+        msg=Twist()
+        msg.linear.x = 1.5
+        msg.angular.z = -3.14
+        self.publisher_.publish(msg)
+        time.sleep(1)
+
+    def move_turtle_onceN(self):
+
+        msg = Twist()
+        msg.linear.x = 0.0   # velocidad hacia adelante
+        msg.angular.z = 1.57  # rotación
+        self.publisher_.publish(msg)
+        time.sleep(1)
+        self.get_logger().info('🐢 La tortuga se movió un ciclo')
+
+        msg = Twist()
+        msg.linear.x = 1.5   # velocidad hacia adelante
+        msg.angular.z = 0.0 # rotación
+        self.publisher_.publish(msg)
+        time.sleep(1)
+        self.get_logger().info('🐢 La tortuga se movió un ciclo')
+
+
+        msg = Twist()
+        msg.linear.x = 0.0   # velocidad hacia adelante
+        msg.angular.z = -2.285 # rotación
+        self.publisher_.publish(msg)
+        time.sleep(1)
+        self.get_logger().info('🐢 La tortuga se movió un ciclo')
+
+
+        sg = Twist()
+        msg.linear.x = 2.0   # velocidad hacia adelante
+        msg.angular.z = 0.0 # rotación
+        self.publisher_.publish(msg)
+        time.sleep(1)
+        self.get_logger().info('🐢 La tortuga se movió un ciclo')
+
+        msg = Twist()
+        msg.linear.x = 0.0   # velocidad hacia adelante
+        msg.angular.z = 2.285 # rotación
+        self.publisher_.publish(msg)
+        time.sleep(1)
+        self.get_logger().info('🐢 La tortuga se movió un ciclo')
+
+        msg = Twist()
+        msg.linear.x = 1.5  # velocidad hacia adelante
+        msg.angular.z = 0.0 # rotación
+        self.publisher_.publish(msg)
+        time.sleep(1)
+        self.get_logger().info('🐢 La tortuga se movió un ciclo')
+
+    def move_turtle_onceD(self):
+
+        msg = Twist()
+        msg.linear.x = 0.0   # velocidad hacia adelante
+        msg.angular.z = 1.57  # rotación
+        self.publisher_.publish(msg)
+        time.sleep(1)
+        self.get_logger().info('🐢 La tortuga se movió un ciclo')
+
+        msg = Twist()
+        msg.linear.x = 1.5   # velocidad hacia adelante
+        msg.angular.z = 0.0 # rotación
+        self.publisher_.publish(msg)
+        time.sleep(1)
+        self.get_logger().info('🐢 La tortuga se movió un ciclo')
+
+
+        msg = Twist()
+        msg.linear.x = 0.0   # velocidad hacia adelante
+        msg.angular.z = -1.57 # rotación
+        self.publisher_.publish(msg)
+        time.sleep(1)
+        self.get_logger().info('🐢 La tortuga se movió un ciclo')
+
+        msg = Twist()
+        msg.linear.x = 2.5   # velocidad hacia adelante
+        msg.angular.z = -3.14 # rotación
+        self.publisher_.publish(msg)
+        time.sleep(1)
+        self.get_logger().info('🐢 La tortuga se movió un ciclo')
+
+    
+
+
+    def move_turtle_onceA(self):
+
+        msg = Twist()
+        msg.linear.x = 0.0   # velocidad hacia adelante
+        msg.angular.z = 0.785  # rotación
+        self.publisher_.publish(msg)
+        time.sleep(1)
+        self.get_logger().info('🐢 La tortuga se movió un ciclo')
+
+
+        msg = Twist()
+        msg.linear.x = 1.5   # velocidad hacia adelante
+        msg.angular.z = 0.0 # rotación
+        self.publisher_.publish(msg)
+        time.sleep(2)
+        self.get_logger().info('🐢 La tortuga se movió un ciclo')
+
+        msg = Twist()
+        msg.linear.x = 0.0   # velocidad hacia adelante
+        msg.angular.z = -1.5 # rotación
+        self.publisher_.publish(msg)
+        time.sleep(1)
+        self.get_logger().info('🐢 La tortuga se movió un ciclo')
+
+        msg = Twist()
+        msg.linear.x = 1.5   # velocidad hacia adelante
+        msg.angular.z = 0.0 # rotación
+        self.publisher_.publish(msg)
+        time.sleep(2)
+        self.get_logger().info('🐢 La tortuga se movió un ciclo')
+
+        msg = Twist()
+        msg.linear.x = 0.0   # velocidad hacia adelante
+        msg.angular.z = 3.14 # rotación
+        self.publisher_.publish(msg)
+        time.sleep(1)
+        self.get_logger().info('🐢 La tortuga se movió un ciclo')
+
+
+        msg = Twist()
+        msg.linear.x = 0.75   # velocidad hacia adelante
+        msg.angular.z = 0.0 # rotación
+        self.publisher_.publish(msg)
+        time.sleep(1)
+        self.get_logger().info('🐢 La tortuga se movió un ciclo')
+
+
+        msg = Twist()
+        msg.linear.x = 0.0   # velocidad hacia adelante
+        msg.angular.z = 0.785 # rotación
+        self.publisher_.publish(msg)
+        time.sleep(1)
+        self.get_logger().info('🐢 La tortuga se movió un ciclo')
+
+        msg = Twist()
+        msg.linear.x = 1.5   # velocidad hacia adelante
+        msg.angular.z = 0.0 # rotación
+        self.publisher_.publish(msg)
+        time.sleep(1)
+        self.get_logger().info('🐢 La tortuga se movió un ciclo')
+
+    def move_turtle_onceM(self):
+
+        msg = Twist()
+        msg.linear.x = 0.0   # velocidad hacia adelante
+        msg.angular.z = 1.57  # rotación
+        self.publisher_.publish(msg)
+        time.sleep(1)
+        self.get_logger().info('🐢 La tortuga se movió un ciclo')
+
+        msg = Twist()
+        msg.linear.x = 1.5   # velocidad hacia adelante
+        msg.angular.z = 0.0 # rotación
+        self.publisher_.publish(msg)
+        time.sleep(1)
+        self.get_logger().info('🐢 La tortuga se movió un ciclo')
+
+        msg = Twist()
+        msg.linear.x = 0.0   # velocidad hacia adelante
+        msg.angular.z = -2.355 # rotación
+        self.publisher_.publish(msg)
+        time.sleep(1)
+        self.get_logger().info('🐢 La tortuga se movió un ciclo')
+
+        msg = Twist()
+        msg.linear.x = 0.75   # velocidad hacia adelante
+        msg.angular.z = 0.0 # rotación
+        self.publisher_.publish(msg)
+        time.sleep(1)
+        self.get_logger().info('🐢 La tortuga se movió un ciclo')
+
+        msg = Twist()
+        msg.linear.x = 0.0   # velocidad hacia adelante
+        msg.angular.z = 1.57  # rotación
+        self.publisher_.publish(msg)
+        time.sleep(1)
+        self.get_logger().info('🐢 La tortuga se movió un ciclo')
+
+        msg = Twist()
+        msg.linear.x = 0.75   # velocidad hacia adelante
+        msg.angular.z = 0.0 # rotación
+        self.publisher_.publish(msg)
+        time.sleep(1)
+        self.get_logger().info('🐢 La tortuga se movió un ciclo')
+
+        msg = Twist()
+        msg.linear.x = 0.0   # velocidad hacia adelante
+        msg.angular.z = -2.355  # rotación
+        self.publisher_.publish(msg)
+        time.sleep(1)
+        self.get_logger().info('🐢 La tortuga se movió un ciclo')
+
+        msg = Twist()
+        msg.linear.x = 1.5   # velocidad hacia adelante
+        msg.angular.z = 0.0 # rotación
+        self.publisher_.publish(msg)
+        time.sleep(1)
+        self.get_logger().info('🐢 La tortuga se movió un ciclo')
+
+    def move_turtle_onceR(self):
+
+        msg = Twist()
+        msg.linear.x = 0.0   # velocidad hacia adelante
+        msg.angular.z = 1.57  # rotación
+        self.publisher_.publish(msg)
+        time.sleep(1)
+        self.get_logger().info('🐢 La tortuga se movió un ciclo')
+
+        msg = Twist()
+        msg.linear.x = 1.5   # velocidad hacia adelante
+        msg.angular.z = 0.0 # rotación
+        self.publisher_.publish(msg)
+        time.sleep(1)
+        self.get_logger().info('🐢 La tortuga se movió un ciclo')
+
+        msg = Twist()
+        msg.linear.x = 0.0   # velocidad hacia adelante
+        msg.angular.z = -1.57 # rotación
+        self.publisher_.publish(msg)
+        time.sleep(1)
+        self.get_logger().info('🐢 La tortuga se movió un ciclo')
+
+        msg = Twist()
+        msg.linear.x = 0.75   # velocidad hacia adelante
+        msg.angular.z = 0.0 # rotación
+        self.publisher_.publish(msg)
+        time.sleep(1)
+        self.get_logger().info('🐢 La tortuga se movió un ciclo')
+
+        msg = Twist()
+        msg.linear.x = 0.0   # velocidad hacia adelante
+        msg.angular.z = -1.57  # rotación
+        self.publisher_.publish(msg)
+        time.sleep(1)
+        self.get_logger().info('🐢 La tortuga se movió un ciclo')
+
+        msg = Twist()
+        msg.linear.x = 0.75   # velocidad hacia adelante
+        msg.angular.z = 0.0 # rotación
+        self.publisher_.publish(msg)
+        time.sleep(1)
+        self.get_logger().info('🐢 La tortuga se movió un ciclo')
+
+        msg = Twist()
+        msg.linear.x = 0.0   # velocidad hacia adelante
+        msg.angular.z = -1.57  # rotación
+        self.publisher_.publish(msg)
+        time.sleep(1)
+        self.get_logger().info('🐢 La tortuga se movió un ciclo')
+
+        msg = Twist()
+        msg.linear.x = 0.75   # velocidad hacia adelante
+        msg.angular.z = 0.0 # rotación
+        self.publisher_.publish(msg)
+        time.sleep(1)
+        self.get_logger().info('🐢 La tortuga se movió un ciclo')
+
+        msg = Twist()
+        msg.linear.x = 0.0   # velocidad hacia adelante
+        msg.angular.z = 2.355 # rotación
+        self.publisher_.publish(msg)
+        time.sleep(1)
+        self.get_logger().info('🐢 La tortuga se movió un ciclo')
+
+        msg = Twist()
+        msg.linear.x = 1.05   # velocidad hacia adelante
+        msg.angular.z = 0.0 # rotación
+        self.publisher_.publish(msg)
+        time.sleep(1)
+        self.get_logger().info('🐢 La tortuga se movió un ciclo')
+
+
+    def move_turtle_onceC(self):
+
+        msg = Twist()
+        msg.linear.x = 0.0   # velocidad hacia adelante
+        msg.angular.z = 3.14  # rotación
+        self.publisher_.publish(msg)
+        time.sleep(1)
+        self.get_logger().info('🐢 La tortuga se movió un ciclo')
+
+        msg = Twist()
+        msg.linear.x = 3.0   # velocidad hacia adelante
+        msg.angular.z = -3.50 # rotación
+        self.publisher_.publish(msg)
+        time.sleep(1)
+        self.get_logger().info('🐢 La tortuga se movió un ciclo')
+
+    def move_turtle_Arriba(self):
+        msg = Twist()
+        msg.linear.x = 1.0   # velocidad hacia adelante
+        msg.angular.z = 0.0  # rotación
+        self.publisher_.publish(msg)
+        self.get_logger().info('🐢 La tortuga se movió un ciclo')
+    
+    def move_turtle_Abajo(self):
+        msg = Twist()
+        msg.linear.x = -1.0   # velocidad hacia adelante
+        msg.angular.z = 0.0 # rotación
+        self.publisher_.publish(msg)
+        self.get_logger().info('🐢 La tortuga se movió un ciclo')
+
+    def move_turtle_Horario(self):
+        msg = Twist()
+        msg.linear.x = 0.0   # velocidad hacia adelante
+        msg.angular.z = 1.57  # rotación
+        self.publisher_.publish(msg)
+        self.get_logger().info('🐢 La tortuga se movió un ciclo')
+
+    def move_turtle_Antihorario(self):
+        msg = Twist()
+        msg.linear.x = 0.0   # velocidad hacia adelante
+        msg.angular.z = -1.57  # rotación
+        self.publisher_.publish(msg)
+        self.get_logger().info('🐢 La tortuga se movió un ciclo')
+
+
+def main(args=None):
+
+    rclpy.init(args=args)
+    node = TurtleController()
+    print("Mi rey elija de las siguientes letras M,R,C,J,N,D,A y para acabar la ejecucion la letra s")
+    key = get_key()
+    while True:
+        key = get_key()
+        print(key)
+        if key == 'j':
+            node.reset_turtle()
+            node.move_turtle_onceJ()
+        elif key== 'n':
+            node.reset_turtle()
+            node.move_turtle_onceN()
+        elif key== 'd':
+            node.reset_turtle()
+            node.move_turtle_onceD()
+        elif key== 'a':
+            node.reset_turtle()
+            node.move_turtle_onceA()
+        elif key== 'm':
+            node.reset_turtle()
+            node.move_turtle_onceM()
+        elif key== 'r':
+            node.reset_turtle()
+            node.move_turtle_onceR()
+        elif key== 'c':
+            node.reset_turtle()
+            node.move_turtle_onceC()
+        elif key == '\x1b[A':
+            node.move_turtle_Arriba()
+            print("Arriba")
+        elif key == '\x1b[B':
+            node.move_turtle_Abajo()
+            print("Abajo")
+        elif key == '\x1b[C':
+            node.move_turtle_Horario()
+            print("Derecha")
+        elif key == '\x1b[D':
+            node.move_turtle_Antihorario()
+            print("Izquierda")
+        elif key == 's':
+            print("Saliendo...")
+            break
+
+    
+    node.destroy_node()
+    rclpy.shutdown()
+

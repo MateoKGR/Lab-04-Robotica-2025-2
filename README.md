@@ -24,27 +24,29 @@ Indice:
 ```mermaid
 flowchart TD
 
-    %% Bloque inicial
-    A([Inicio del programa]) --> B[Inicializar rclpy]
-    B --> C[Crear nodo TurtleController]
-    C --> D[Crear publisher /turtle1/cmd_vel]
-    D --> E[Crear cliente del servicio /reset]
-    E --> F[Esperar disponibilidad del servicio]
+    A([Inicio del programa])
+    B[Inicializar rclpy]
+    C[Crear nodo TurtleController]
+    D[Crear publisher /turtle1/cmd_vel]
+    E[Crear cliente del servicio /reset]
+    F[Esperar servicio /reset]
 
-    %% Loop principal
-    F --> G{Leer tecla\n(get_key())}
+    A --> B --> C --> D --> E --> F
 
-    %% Acciones según tecla
-    G -->|Letra J,N,D,A,M,R,C| H[reset_turtle()]
-    H --> I[Ejecutar función de letra\n(move_turtle_onceX)]
+    G{Tecla presionada?}
 
-    G -->|Flechas| J[Ejecutar movimiento manual:\nArriba/Abajo/Horario/Antihorario]
+    F --> G
 
-    G -->|Tecla s| K([Salir del programa])
+    H[reset_turtle()]
+    I[Ejecutar rutina de letra]
 
-    %% Retorno al loop
-    I --> G
-    J --> G
+    J[Movimiento manual:\nArriba / Abajo / Giro horario / Giro antihorario]
+
+    K([Salir del programa])
+
+    G -->|Letra J,N,D,A,M,R,C| H --> I --> G
+    G -->|Flechas| J --> G
+    G -->|s| K
 ```
 
 

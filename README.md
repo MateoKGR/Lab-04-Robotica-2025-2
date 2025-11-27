@@ -10,9 +10,9 @@ Laboratorio 4 de Robótica 2025-2s, realizado por Jeison Diaz y Mateo Ramos
 Indice:
 1. [Objetivos](#objetivos)
 2. [Procedimientos realizados](#procedimientos_realizados)
-3. [Decisiones de diseño](#decisiones_de_diseño)
-4. [Funcionamiento general](#funcionamiento_general)
-5. [Diagrama de flujo](#diagrama_de_flujo)
+3. [Funcionamiento general y decisiones de diseño](#funcionamiento_y_diseño)
+4. [Diagrama de flujo](#diagrama_de_flujo)
+5. [Conclusiones](#conclusiones)
 
 
 ## Objetivos
@@ -48,9 +48,66 @@ Con todas estas piezas listas, estructuramos el **bucle principal del programa**
 
 Finalmente, realizamos las pruebas del sistema completo. Ejecutamos el nodo y *turtlesim* simultáneamente, verificando lectura de teclado, dibujos de letras, funcionamiento del servicio y control manual. Durante estas pruebas ajustamos valores de velocidad y tiempos de ejecución para mejorar la claridad de las figuras.
 
-## Decisiones de diseño
+## Funcionamiento general y decisiones de diseño.
+Para desarrollar este laboratorio tomamos una serie de decisiones técnicas que definieron la estructura final del programa y la manera en que interactuamos con *turtlesim* usando ROS2. Todo el funcionamiento del código se construyó alrededor de un objetivo principal: permitir que el usuario controle la tortuga mediante el teclado y que pueda dibujar diferentes letras en pantalla, cada una con su propia secuencia de movimientos.
 
-## Funcionamiento general
+1. Arquitectura general del nodo
+
+La primera decisión clave fue implementar un único nodo llamado `turtle_controller`. Dentro de este nodo se integrarían todas las tareas necesarias: publicar velocidades, llamar servicios y capturar las teclas del usuario. No utilizamos suscriptores u otros nodos porque el laboratorio se centra principalmente en el envío de comandos a *turtlesim*, no en recibir información de él.
+
+Para controlar la tortuga utilizamos un **publisher** hacia el tópico `/turtle1/cmd_vel`, enviando mensajes `Twist`. La velocidad lineal y angular se manejan dentro de este tipo de mensaje, por lo que fue la elección natural para mover la tortuga en ROS2.
+
+ 2. Uso del servicio `/reset`
+Otra decisión importante fue aprovechar el servicio nativo `/reset` del simulador. En lugar de crear un servicio propio, utilizamos este ya disponible para devolver la tortuga a una posición conocida antes de dibujar cualquier letra. Esto garantizaba consistencia en la forma final de las figuras, ya que todas partían desde la misma orientación inicial.
+
+Para esto, el nodo creó un **cliente** del servicio `/reset`, y decidimos llamar al servicio de manera asíncrona (`call_async`) para no bloquear el programa mientras se realizaba el reinicio.
+
+Cada vez que el usuario elige dibujar una letra, la tortuga se reinicia automáticamente usando esta función.
+
+3. Lectura de teclado sin presionar Enter
+Para hacer el programa interactivo, tomamos la decisión de leer las teclas directamente de la terminal sin requerir Enter. Para lograrlo, usamos las librerías `sys`, `tty` y `termios`. Aunque existen alternativas más simples, preferimos no agregar dependencias externas y mantener el programa compatible con cualquier terminal Linux.
+
+Esta elección permite detectar incluso teclas especiales como las flechas (`↑`, `↓`, `→`, `←`). La función `get_key()` interpreta secuencias ESC para reconocer correctamente estas teclas.
+
+4. Estrategia para dibujar letras
+En lugar de implementar cinemática compleja o calcular trayectorias matemáticamente, optamos por la estrategia más directa: controlar la distancia a partir de la relación: **posición = velocidad × tiempo**
+
+Cada letra tiene su propia función (`move_turtle_onceJ()`, `move_turtle_onceN()`, etc.), donde:
+1. Se construye un mensaje `Twist`
+2. Se ajustan sus campos `linear.x` y/o `angular.z`
+3. Se publica en el tópico
+4. Se espera un tiempo con `time.sleep()`
+
+Este método resultó suficiente para dibujar letras reconocibles dentro del simulador. Ajustamos tiempos y velocidades manualmente hasta lograr formas que visualmente se acercaran a las letras deseadas.
+
+5. Movimientos manuales con las flechas
+Decidimos complementar el dibujo automático con control manual de la tortuga. Para esto, se implementaron funciones que responden inmediatamente a:
+- flecha arriba → avanzar  
+- flecha abajo → retroceder  
+- flecha derecha → girar horario  
+- flecha izquierda → girar antihorario  
+
+Estas funciones también publican un `Twist`, pero sin pausas largas, para que el movimiento se sienta natural y fluido.
+
+6. Bucle principal y estructura de ejecución
+
+Todo el flujo del programa está organizado alrededor de un `while True`. Esta decisión permitió centralizar la lectura del teclado y la selección de acciones, sin repartir la lógica por todo el archivo.
+
+El bucle funciona así:
+1. Llama a `get_key()`  
+2. Evalúa qué tecla presionó el usuario  
+3. Ejecuta una acción:
+- letras → se reinicia la tortuga y se dibuja la figura  
+- flechas → control manual inmediato  
+- `s` → salir del programa  
+De esta manera logramos una estructura clara, fácil de entender y mantener.
+
+7. Finalización ordenada del nodo
+
+Finalmente, cuando el usuario presiona `s`, destruimos el nodo y ejecutamos `rclpy.shutdown()`. Esta decisión asegura un cierre seguro y limpio del entorno ROS2, evitando procesos bloqueados o nodos sin cerrar.
+
+En conjunto, todas estas decisiones —desde el uso del servicio `/reset`, pasando por el diseño de las trayectorias con velocidades y tiempos, hasta la lectura directa del teclado— permitieron construir un código compacto, comprensible y funcional que cumple con los objetivos del laboratorio: interactuar con ROS2, manipular tópicos y servicios, y controlar un robot (en este caso, *turtlesim*) de manera programada e interactiva.
+
 ## Diagrama de flujo
 
 ```mermaid

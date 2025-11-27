@@ -25,8 +25,6 @@ Indice:
 
 ## Procedimientos realizados
 
-## 🛠️ Procedimientos Realizados
-
 Para desarrollar este laboratorio comenzamos por preparar todo el entorno de trabajo necesario para ejecutar ROS2 Humble. Primero instalamos **Ubuntu 22.04**, ya que es la distribución compatible con esta versión de ROS. Una vez dentro del sistema, seguimos cuidadosamente las guías proporcionadas por el laboratorio para familiarizarnos con Linux y con los fundamentos de ROS2. Estas guías fueron esenciales, especialmente las de instalación de ROS2 Humble y la del paquete *turtlesim*, disponibles en los siguientes repositorios:
 
 - https://github.com/labsir-un/ROB_Intro_Linux.git  
@@ -50,10 +48,8 @@ Con todas estas piezas listas, estructuramos el **bucle principal del programa**
 
 Finalmente, realizamos las pruebas del sistema completo. Ejecutamos el nodo y *turtlesim* simultáneamente, verificando lectura de teclado, dibujos de letras, funcionamiento del servicio y control manual. Durante estas pruebas ajustamos valores de velocidad y tiempos de ejecución para mejorar la claridad de las figuras.
 
-Con todo funcionando correctamente, pasamos a documentar el proceso en el repositorio de GitHub, organizando el código, creando el `README.md` y añadiendo diagramas, instrucciones y explicaciones detalladas del funcionamiento del programa.
-
-
 ## Decisiones de diseño
+
 ## Funcionamiento general
 ## Diagrama de flujo
 

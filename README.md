@@ -23,17 +23,30 @@ Indice:
 
 ```mermaid
 flowchart TD
-  Start([Inicio])
-  Init["Inicializar nodo ROS2\ny publisher"]
-  Loop["Bucle principal"]
-  Key["Leer tecla"]
-  Move["Enviar twist"]
-  Stop([Fin])
 
-  Start --> Init --> Loop
-  Loop --> Key --> Move --> Loop
-  Loop -->|q| Stop
+    %% Bloque inicial
+    A([Inicio del programa]) --> B[Inicializar rclpy]
+    B --> C[Crear nodo TurtleController]
+    C --> D[Crear publisher /turtle1/cmd_vel]
+    D --> E[Crear cliente del servicio /reset]
+    E --> F[Esperar disponibilidad del servicio]
+
+    %% Loop principal
+    F --> G{Leer tecla\n(get_key())}
+
+    %% Acciones según tecla
+    G -->|Letra J,N,D,A,M,R,C| H[reset_turtle()]
+    H --> I[Ejecutar función de letra\n(move_turtle_onceX)]
+
+    G -->|Flechas| J[Ejecutar movimiento manual:\nArriba/Abajo/Horario/Antihorario]
+
+    G -->|Tecla s| K([Salir del programa])
+
+    %% Retorno al loop
+    I --> G
+    J --> G
 ```
+
 
 
 

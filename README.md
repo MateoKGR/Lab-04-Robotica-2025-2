@@ -35,7 +35,7 @@ C --> D
 D --> E
 E --> F
 
-G{Tecla presionada?}
+G{¿Tecla presionada?}
 F --> G
 
 H[reset_turtle]
